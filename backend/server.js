@@ -1,29 +1,19 @@
 import express from "express";
 import dotenv from "dotenv/config";
-import date from "./date.js";
-import getURL from "./getURL.js"
 import viewEngine from "./viewEngine.js";
+import expressLayouts from'express-ejs-layouts'
+import route from'./src/routes/index.js';
+import path,{dirname} from "path";
+import { fileURLToPath } from 'url';
+import connection from "./src/config/connectDB.js";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const app = express();
+app.use(expressLayouts)
 viewEngine(app);
+app.use(express.static(path.join(__dirname,'./src/resources/public')))
+route(app);
+
 const port = process.env.PORT
-app.get('/', (req,res) => {
-    res.send('Hello world!')
-} )
-app.get('/date', (req,res) => {
-    res.send(date())
-} )
-app.get('/geturl', (req,res) => {
-    res.send(getURL.getPath(req) + "<br>"+ getURL.getParamsURL(req))
-} )
-app.get('/ejs', (req,res) => {
-    res.render("test")
-} )
-app.get('/home', (req,res) => {
-    res.render("home")
-} )
-app.get('/about', (req,res) => {
-    res.render("about") 
-} )
-app.listen(port, () => {
-    console.log(`lắng nghe với cổng ${port}`)
-})
+app.listen(port, () => console.log(`dang nghe cai port ${port}`))
+

@@ -1,0 +1,33 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">Username</th>
+        <th scope="col">Full name</th>
+        <th scope="col">Address</th>
+        <th scope="col">Setting</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% for(let i=0; i<data.rows.length; i++){ %>
+            <tr>
+              <td scope="col"><%= i+1%></td>
+              <td>
+                  <%= data.rows[i].username %>
+              </td>
+              <td>
+                  <%= data.rows[i].fullname %>
+              </td>
+              <td>
+                  <%= data.rows[i].address %>
+              </td>
+              <td>
+                <i class="fa-regular fa-eye" style="color: #74C0FC; cursor: pointer;margin: 0 5px;"></i>
+                <i class="fa-regular fa-pen-to-square" style="color: #74C0FC; cursor: pointer;margin: 0 5px;"></i>
+                <i class="fa-solid fa-trash-can" style="color: #f60909; cursor: pointer;margin: 0 5px;"></i>
+              </td>
+            </tr>   
+        <% }%>
+    </tbody>
+  </table>
+  <a href="http://localhost:3000/addUser" class="btn btn-primary btn-lg" tabindex="-1" role="button">Thêm người dùng</a>

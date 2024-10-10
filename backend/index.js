@@ -1,6 +1,7 @@
 import http from "http";
 import date from "./date.js";
 import getURL from "./getURL.js"
+import route from'./routes/index';
 
 http.createServer((req,res) =>{
     res.writeHead(200, {
