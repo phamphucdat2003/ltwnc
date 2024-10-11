@@ -6,10 +6,14 @@ import route from'./src/routes/index.js';
 import path,{dirname} from "path";
 import { fileURLToPath } from 'url';
 import connection from "./src/config/connectDB.js";
+import bodyParser from 'body-parser';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
 app.use(expressLayouts)
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
 viewEngine(app);
 app.use(express.static(path.join(__dirname,'./src/resources/public')))
 route(app);
