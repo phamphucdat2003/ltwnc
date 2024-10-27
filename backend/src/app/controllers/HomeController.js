@@ -28,15 +28,6 @@ class HomeController {
         }
       }
 
-    async getFromUdate (req,res) {
-      let user =  await userModel.getUser(req.params.id);
-      // console.log(user);
-      
-      return res.render('from/updateUser', {
-        data: {Title: 'fromUdate',page: 'fromUpdate',user}
-      })
-    }
-
     async updateUser (req, res) {
       const {password, fullname, address, sex, email} = req.body
       const id = req.params.id
