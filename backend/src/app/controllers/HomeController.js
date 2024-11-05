@@ -1,4 +1,4 @@
-import userModel from "../../services/userModel.js";
+import userModel from "../services/userModel.js";
 
 class HomeController {
     //[GET] /home
@@ -6,15 +6,13 @@ class HomeController {
         let userList =  await userModel.getALLUser();
         res.render('home',{data:{title:"List User",page: "listUser",rows:userList}})
     }
-    async getFromCreate (req,res) {
+    getFromCreate (req,res) {
         return res.render('from/addUser', {
           data: {Title: 'fromCreate',page: 'fromCreate'}
         })
       }
     async createNewUser (req, res) {
         const {username, password, fullname, address, sex, email} = req.body
-        // console.log("------------------------------------------");
-        // console.log(username, password, fullname, address, sex, email);
         try {
           const newUserId =
             await userModel.createNewUser(username, password, fullname, address, sex, email)

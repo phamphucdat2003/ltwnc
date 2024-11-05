@@ -1,9 +1,12 @@
 <div class="container my-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="text-primary">Danh sách người dùng</h3>
-    <a href="/create-user" class="btn btn-primary btn-lg" role="button">
-      <i class="bi bi-person-plus"></i> Thêm người dùng
-    </a>
+    <% if (session.user && session.user.role === 0) { %>
+      <button onclick="modal({name:'create', object:'user'})" class="btn btn-primary btn-lg" role="button">
+        <i class="bi bi-person-plus"></i> Thêm người dùng
+      </button>
+    <% } %>
+    
   </div>
 
   <div class="table-responsive">
@@ -36,12 +39,14 @@
               <button id="showUser" class="btn btn-outline-info btn-sm me-2" title="Xem">
                 <i class="bi bi-eye"></i>
               </button>
-              <button onclick="updateUser('<%= data.rows[i].id %>')" class="btn btn-outline-warning btn-sm me-2" title="Cập nhật">
-                <i class="bi bi-pencil-square"></i>
-              </button>
-              <button data-userid='<%= data.rows[i].id %>' data-bs-toggle='modal' data-bs-target='#delete-user-model' class="btn btn-outline-danger btn-sm" title="Xóa">
-                <i class="bi bi-trash"></i>
-              </button>
+              <% if (session.user && (session.user.role === 0 || data.rows[i].id == session.user.id)) { %>
+                <button onclick="modal({name:'update', object:'user'},'<%= data.rows[i].id %>')" class="btn btn-outline-warning btn-sm me-2" title="Cập nhật">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button onclick="modal({name:'delete', object:'user'},'<%= data.rows[i].id %>')" class="btn btn-outline-danger btn-sm" title="Xóa">
+                  <i class="bi bi-trash"></i>
+                </button>
+              <% } %>
             </td>
           </tr>
         <% } %>
@@ -49,152 +54,3 @@
     </table>
   </div>
 </div>
-
-<div id='delete-user-model' class='modal fade' tabindex='-1' aria-labelledby='deleteUserLabel' aria-hidden='true'>
-  <div class='modal-dialog modal-dialog-centered'>
-    <div class='modal-content'>
-      <div class='modal-header'>
-        <h5 class='modal-title' id='deleteUserLabel'>Xóa user này</h5>
-        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
-      </div>
-      <div class='modal-body'>
-        <p>Hành động này không thể khôi phục!</p>
-      </div>
-      <div class='modal-footer'>
-        <button id='btn-delete' type='button' class='btn btn-danger'>Chấp Nhận</button>
-        <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Hủy</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var btndeleteUser = document.getElementById('btn-delete');
-    var userId;
-
-    var deleteModal = document.getElementById('delete-user-model');
-    deleteModal.addEventListener('show.bs.modal', function (event) {
-      var button = event.relatedTarget;
-      userId = button.getAttribute('data-userid');
-    });
-
-    btndeleteUser.onclick = function () {
-      var deleteFormUser = document.createElement('form');
-      deleteFormUser.method = "POST";
-      deleteFormUser.action = `/delete-user/${userId}`;
-      document.body.appendChild(deleteFormUser);
-      deleteFormUser.submit();
-    }
-  });
-
-  function updateUser(id) {
-    // fetch('/api/getuser', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //         id: id
-    //     })
-    // })
-    fetch(`/api/getuser${id}`)
-    .then(response => response.json())
-    .then(async(data) => {
-        var modalElement = document.createElement('div');
-        modalElement.innerHTML = `
-          <div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="updateUserModalLabel">Cập nhật người dùng</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" class="p-4 border rounded shadow-sm bg-light">
-                      <h4 class="mb-4 text-primary">Cập nhật người dùng</h4>
-                      <div class="mb-3">
-                        <label for="username" class="form-label fw-bold">Tên tài khoản</label>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="bi bi-person"></i>
-                          </span>
-                          <input type="text" class="form-control" value="${data.username}" disabled />
-                        </div>
-                      </div>
-                      <div class="mb-3">
-                        <label for="password" class="form-label fw-bold">Mật khẩu</label>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="bi bi-lock"></i>
-                          </span>
-                          <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required />
-                        </div>
-                      </div>
-                      <div class="mb-3">
-                        <label for="fullname" class="form-label fw-bold">Họ và tên</label>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="bi bi-card-text"></i>
-                          </span>
-                          <input type="text" class="form-control" id="fullname" name="fullname" value="${data.fullname}" placeholder="Nhập họ và tên" required />
-                        </div>
-                      </div>
-                      <div class="mb-3">
-                        <label for="address" class="form-label fw-bold">Địa chỉ</label>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="bi bi-house"></i>
-                          </span>
-                          <input type="text" class="form-control" id="address" name="address" value="${data.address}" placeholder="Nhập địa chỉ" required />
-                        </div>
-                      </div>
-                      <div class="mb-3">
-                        <label class="form-label fw-bold">Giới tính</label>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" id="sexMale" name="sex" value="1" ${data.sex === 1 ? 'checked' : ''} />
-                          <label class="form-check-label" for="sexMale">Nam</label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" id="sexFemale" name="sex" value="0" ${data.sex === 0 ? 'checked' : ''} />
-                          <label class="form-check-label" for="sexFemale">Nữ</label>
-                        </div>
-                      </div>
-                      <div class="mb-3">
-                        <label for="email" class="form-label fw-bold">Email</label>
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="bi bi-envelope"></i>
-                          </span>
-                          <input type="email" class="form-control" id="email" name="email" value="${data.email}" placeholder="Nhập địa chỉ email" required />
-                        </div>
-                      </div>
-                      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                        <button class="btn btn-primary btn-lg" type="submit">
-                          <i class="bi bi-plus-circle"></i> Cập nhật
-                        </button>
-                      </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-        
-        document.body.appendChild(modalElement);
-
-        var myModal = new bootstrap.Modal(modalElement.querySelector('#updateUserModal'));
-        myModal.show();
-
-        modalElement.querySelector('#updateUserModal').addEventListener('hidden.bs.modal', function () {
-            modalElement.remove();
-        });
-    })
-    .catch(error => {
-        console.error('Lỗi:', error);
-    });
-}
-</script>

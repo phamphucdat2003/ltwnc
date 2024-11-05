@@ -1,0 +1,32 @@
+<div class="container d-flex justify-content-center align-items-center" style="height: 600px;">
+    <div class="card shadow" style="width: 100%; max-width: 400px;">
+        <div class="card-body">
+            <h5 class="card-title text-center mb-4">Welcome Back</h5>
+            <% if (messages) { %>
+                <div class="alert alert-danger <%= messages =='' ? 'd-none' : '' %>" id="error-message">
+                    <%= messages %>
+                </div>
+            <% } %>
+            
+
+            <form action="/auth/login" method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+
+            <!-- <div class="text-center mt-3">a
+                <a href="#" class="text-muted">Forgot password?</a>
+            </div>
+            <div class="text-center mt-2">
+                <a href="#" class="text-muted">Create an account</a>
+            </div> -->
+        </div>
+    </div>
+</div>

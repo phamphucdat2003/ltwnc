@@ -1,42 +1,40 @@
 import express from "express";
 import dotenv from "dotenv/config";
-import viewEngine from "./viewEngine.js";
-import expressLayouts from'express-ejs-layouts'
+//config
+import setupStaticFiles from "./src/config/pathConfig.js";
+import viewEngine from "./src/config/viewEngine.js";
+import setSession from "./src/config/sessionConfig.js";
+//web
 import route from'./src/routes/index.js';
-import path,{dirname} from "path";
-import { fileURLToPath } from 'url';
-import connection from "./src/config/connectDB.js";
+//library
+import expressLayouts from'express-ejs-layouts'
 import bodyParser from 'body-parser';
-import session from 'express-session';
-const port = process.env.PORT
+import flash from 'connect-flash';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const port = process.env.PORT || 3000
+
+
 const app = express();
+app.use(flash())
+//setup đường dẫn vào public
+setupStaticFiles(app); 
+//dựng khung layouts cho ejs
 app.use(expressLayouts)
+
+
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
-viewEngine(app);
-app.use(express.static(path.join(__dirname,'./src/resources/public')))
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
-  }))
-app.use((req, res, next) => {
-    res.locals.session = req.session;
-    next();
-});
+viewEngine(app);
+
+setSession(app);
 
 route(app);
 
-
-
-
-
-
-
-app.listen(port, () => console.log(`dang nghe cai port ${port}`))
+app.listen(port, () => {
+    console.log("-------------------------------------------------");
+    console.log("   /\\_/\\ ");
+    console.log("  ( o.o )");
+    console.log(` > ${port} < `);
+})
 
