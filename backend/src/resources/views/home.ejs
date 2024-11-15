@@ -23,33 +23,35 @@
       </thead>
       <tbody>
         <% for(let i = 0; i < data.rows.length; i++) { %>
-          <tr>
-            <td><%= data.rows[i].id %></td>
-            <td><%= data.rows[i].username %></td>
-            <td><%= data.rows[i].fullname %></td>
-            <td><%= data.rows[i].address %></td>
-            <td>
-              <% if (data.rows[i].sex === 1) { %> 
-                Nam
-              <% } else { %>
-                Nữ
-              <% } %>
-            </td>
-            <td class="text-center">
-              <button id="showUser" class="btn btn-outline-info btn-sm me-2" title="Xem">
-                <i class="bi bi-eye"></i>
-              </button>
-              <% if (session.user && (session.user.role === 0 || data.rows[i].id == session.user.id)) { %>
-                <button onclick="modal({name:'update', object:'user'},'<%= data.rows[i].id %>')" class="btn btn-outline-warning btn-sm me-2" title="Cập nhật">
-                  <i class="bi bi-pencil-square"></i>
+          <% if (data.rows[i].role !== 0) { %>
+            <tr>
+              <td><%= data.rows[i].id %></td>
+              <td><%= data.rows[i].username %></td>
+              <td><%= data.rows[i].fullname %></td>
+              <td><%= data.rows[i].address %></td>
+              <td>
+                <% if (data.rows[i].sex === 1) { %> 
+                  Nam
+                <% } else { %>
+                  Nữ
+                <% } %>
+              </td>
+              <td class="text-center">
+                <button onclick="modal({name:'view', object:'user'},'<%= data.rows[i].id %>')" id="showUser" class="btn btn-outline-info btn-sm me-2" title="Xem">
+                  <i class="bi bi-eye"></i>
                 </button>
-                <button onclick="modal({name:'delete', object:'user'},'<%= data.rows[i].id %>')" class="btn btn-outline-danger btn-sm" title="Xóa">
-                  <i class="bi bi-trash"></i>
-                </button>
-              <% } %>
-            </td>
-          </tr>
-        <% } %>
+                <% if (session.user && (session.user.role === 0 || data.rows[i].id == session.user.id)) { %>
+                  <button onclick="modal({name:'update', object:'user'},'<%= data.rows[i].id %>')" class="btn btn-outline-warning btn-sm me-2" title="Cập nhật">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button onclick="modal({name:'delete', object:'user'},'<%= data.rows[i].id %>')" class="btn btn-outline-danger btn-sm" title="Xóa">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                <% } %>
+              </td>
+            </tr>
+          <% } %>
+        <% } %>        
       </tbody>
     </table>
   </div>

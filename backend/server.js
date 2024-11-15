@@ -4,6 +4,8 @@ import dotenv from "dotenv/config";
 import setupStaticFiles from "./src/config/pathConfig.js";
 import viewEngine from "./src/config/viewEngine.js";
 import setSession from "./src/config/sessionConfig.js";
+import startXampp from "./src/config/startXampp.js";
+
 //web
 import route from'./src/routes/index.js';
 //library
@@ -11,10 +13,12 @@ import expressLayouts from'express-ejs-layouts'
 import bodyParser from 'body-parser';
 import flash from 'connect-flash';
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 
 
 const app = express();
+
+startXampp()
 app.use(flash())
 //setup đường dẫn vào public
 setupStaticFiles(app); 

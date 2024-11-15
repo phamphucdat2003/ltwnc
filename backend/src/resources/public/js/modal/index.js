@@ -166,6 +166,75 @@ function created(object) {
             console.log(`Unknown update oject: ${object}`);
   }
 }
+function view(object,id) {
+  const viewUser = (id) => {
+      fetch(`/api/getuserbyid/${id}`)
+      .then(response => response.json())
+      .then(async(data) => {
+          var modalElement = document.createElement('div');
+          modalElement.innerHTML = `
+         <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content border-0 shadow-lg">
+              <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="viewUserModalLabel">Thông tin người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body p-4">
+                <div class="card border-0">
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <h6 class="fw-bold text-muted">Tên đăng nhập</h6>
+                      <p class="mb-0">${data.username}</p>
+                    </div>
+                    <div class="mb-3">
+                      <h6 class="fw-bold text-muted">Họ và tên</h6>
+                      <p class="mb-0">${data.fullname}</p>
+                    </div>
+                    <div class="mb-3">
+                      <h6 class="fw-bold text-muted">Địa chỉ</h6>
+                      <p class="mb-0">${data.address}</p>
+                    </div>
+                    <div class="mb-3">
+                      <h6 class="fw-bold text-muted">Giới tính</h6>
+                      <p class="mb-0">${data.sex === 1 ? 'Nam' : 'Nữ'}</p>
+                    </div>
+                    <div class="mb-3">
+                      <h6 class="fw-bold text-muted">Email</h6>
+                      <p class="mb-0">${data.email}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        `;
+      
+        document.body.appendChild(modalElement);
+        var myModal = new bootstrap.Modal(modalElement.querySelector('#viewUserModal'));
+        myModal.show();
+        modalElement.querySelector('#viewUserModal').addEventListener('hidden.bs.modal', function () {
+            modalElement.remove();
+        });
+      
+      })
+      .catch(error => {
+          console.error('Lỗi:', error);
+      });
+  }
+  switch (object) {
+      case "user":
+          viewUser(id)
+          break;
+      default:
+          console.log(`Unknown update oject: ${object}`);
+  }
+}
+
 function updated(object,id) {
     const updateUser = (id) => {
         fetch(`/api/getuserbyid/${id}`)
@@ -232,10 +301,10 @@ function updated(object,id) {
                       </form>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button class="btn btn-primary ms-auto" type="button" id="submitUpdate">
-                      <i class="bi bi-plus-circle"></i> Cập nhật
+                    <button class="btn btn-primary" type="button" id="submitUpdate">
+                    <i class="bi bi-plus-circle"></i> Cập nhật
                     </button>
+                    <button type="button" class="btn btn-secondary  ms-auto" data-bs-dismiss="modal">Đóng</button>
                   </div>
                 </div>
               </div>
@@ -291,6 +360,9 @@ function updated(object,id) {
                 console.log(`Unknown update oject: ${object}`);
     }
 }
+
+
+
 function deleted(object,id) {
   const deleteUser = (id) => {
     var modalElement = document.createElement('div');
@@ -366,6 +438,9 @@ function modal(action,id) {
     switch(action.name) {
         case 'create':
             created(action.object)
+            break;
+        case 'view':
+            view(action.object,id)
             break;
         case 'update':
             updated(action.object,id)

@@ -18,17 +18,17 @@ function App() {
   return (
     <>
       {isLogin ? <h2>đã đăng nhập</h2> : <h2>chưa đăng nhập</h2>}
-      {/* <Header /> */}
+      <Header />
       <Menu />
       <Information nameuser="truong van dat" />
       <Button handleClick={handleClick} isLogin={isLogin} />
-      {/* <Footer /> */}
+      <Footer />
 
-      {/* <Hello name="truong van dat"/> */}
+      <Hello name="truong van dat"/>
 
-      {/* <Car /> */}
+      <Car />
 
-      {/* <Login /> */}
+      <Login />
     </>
   );
 }
