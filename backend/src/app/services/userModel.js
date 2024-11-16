@@ -1,6 +1,6 @@
 
 
-import pool from "../../config/connectDB.js";
+import {pool} from "../../config/connectDB.js";
 class userModel {
 
   async getALLUser() {

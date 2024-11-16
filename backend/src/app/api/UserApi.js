@@ -1,4 +1,4 @@
-import userModel from "../services/userModel.js";
+import {userModel} from "../services/index.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -76,17 +76,34 @@ class UserApi {
             const accessToken = jwt.sign({ userId: user.id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
             res.cookie('token', accessToken, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: false,
                 sameSite: 'strict',
                 maxAge: 60 * 60 * 1000
             });
 
             // Trả về kết quả
-            res.status(200).json({ message: 'Đăng nhập thành công', accessToken: accessToken });
+            res.status(200).json({ message: 'Success', accessToken: accessToken });
         } catch (error) {
             next(error);
         }
     }
+    async logout(req, res, next) {
+        try {
+            // Xóa token khỏi cookie
+            res.clearCookie('token', {
+                httpOnly: true,          
+                secure: false, 
+                sameSite: 'strict',    
+                maxAge: 0,
+            });
+    
+            // Trả về phản hồi thành công
+            res.status(200).json({ message: 'Đăng xuất thành công' });
+        } catch (error) {
+            next(error);  // Xử lý lỗi nếu có
+        }
+    }
+    
 }
 
 export default new UserApi();

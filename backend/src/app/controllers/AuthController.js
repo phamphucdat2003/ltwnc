@@ -1,4 +1,4 @@
-import userModel from "../services/userModel.js";
+import {userModel} from "../services/index.js";
 import bcrypt from 'bcryptjs'
 
 class AuthController {
